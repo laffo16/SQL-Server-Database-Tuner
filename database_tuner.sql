@@ -32,7 +32,7 @@
 ------------------------------------------------------------
 -- Version
 ------------------------------------------------------------
-:SETVAR Version "2.12"
+:SETVAR Version "2.13"
 
 ------------------------------------------------------------
 -- Prerequisites
@@ -10153,6 +10153,11 @@ EXEC #AppendLine '- Numeric fields are heuristics. Treat any numeric priors (for
 EXEC #AppendLine '- Cite precisely. When recommending an action, reference the strongest concrete evidence: query IDs, object names, wait names, stats age, or relevant CSV blocks.';
 EXEC #AppendLine '- Export Schema = user configuration setting which appends a database schema export section to the end of the markdown report.';
 EXEC #AppendLine '- Safe Mode = user configuration setting which redacts sensitive information (shows [SafeMode] for redacted values).';
+EXEC #AppendLine '- Low-signal behaviour (applies to all main-menu items and helpers). If a primary runtime slice (for example Top Queries, Missing Indexes, Query Store, Wait Stats) is empty or low-signal, acknowledge this once in a short, matter-of-fact sentence, then immediately pivot to other evidence that does exist: schema, index definitions, statistics, module code, file layout, backup history, server configuration, or cross-database patterns. Never make \"no signals\", \"nothing to tune\", \"re-run the collector\", or \"enable feature X and try again\" the main story or the primary recommendation; it is fine to mention instrumentation gaps (for example Query Store OFF) or \"collect more data later\" as a secondary note near the end, not as the headline.';
+EXEC #AppendLine '- Dev / test / low-activity databases. Treat dev or low-usage databases the same as production in terms of analysis quality: a quiet DMV surface does not mean there is nothing to improve. When DMVs and Query Store are empty because the database is not under load, assume the stored procedures, views, and functions represent the intended future workload. From that code and schema alone, still evaluate predicates and joins for SARGability (functions on filter columns, CASE in joins, non-searchable patterns) and infer likely missing or suboptimal indexes based on common join/filter columns and key order, even if the missing-index DMVs return no rows.';
+EXEC #AppendLine '- Prefer concrete, object-level actions. Frame recommendations as specific changes to objects: for example \"rewrite this view predicate for SARGability\", \"drop or consolidate these unused indexes\", \"change these file growth settings\", \"add these targeted statistics\". Where possible, show example T-SQL or exact settings, and tie each recommendation to the evidence you have. It is better to give a small number of well-reasoned, schema-driven recommendations than many vague or generic ones.';
+EXEC #AppendLine '- Use cross-area thinking. If one evidence stream is empty, lean on others: for example, when there are no hot queries, look at T-SQL modules, indexes, and statistics and propose SARGable rewrites or better index designs; when missing-index DMVs are empty, use schema plus index usage to propose obvious new indexes or index consolidation; when waits are quiet, look at file layout, autogrowth, backup strategy, CHECKDB posture, and maintenance patterns. Connect dots across areas when helpful (for example a heavy trigger pattern in T-SQL plus slow log IO plus autogrowth settings).';
+EXEC #AppendLine '- Keep the tone pragmatic. Avoid blaming the environment or the script for lack of signals. Assume the user already knows the environment is quiet or dev; focus on what they can improve today and what will make future troubleshooting easier. Be clear about risk versus impact, but stay practical and action-oriented.';
 EXEC #AppendLine '';
 EXEC #AppendLine '## First interaction (Main Menu)';
 EXEC #AppendLine '';
@@ -10181,8 +10186,8 @@ EXEC #AppendLine '     Server configuration, memory, files, IO, and maintenance 
 EXEC #AppendLine '  7) Full Analysis';
 EXEC #AppendLine '     Prioritised recommendations across all areas based on this snapshot.';
 EXEC #AppendLine '- Helpers (11-20): positioned between Menu and Top-10. Currently defined:';
-EXEC #AppendLine '  11) Find the top 5 queries best suited for optimisation (rewrite, sargable).';
-EXEC #AppendLine '  12) Find the top 5 missing indexes.';
+EXEC #AppendLine '  11) Top 5 queries / T-SQL modules to tune (SARGable - from DMVs and schema).';
+EXEC #AppendLine '  12) Top 5 index actions (missing / redundant / covering - from DMVs and schema).';
 EXEC #AppendLine '- Top-10 evidence-backed low-risk opportunities (T1-10):';
 EXEC #AppendLine '  - Low-risk quick wins (target Risk <= 4.0; allow slightly higher only if clearly very high-impact, low effort, and there are not enough clean low-risk candidates). If no meaningful workload/DMV/Query Store data, still populate T1-10 from schema-driven analysis (views/procs/indexes/statistics) rather than defaulting to maintenance-only items.';
 EXEC #AppendLine '  - Make the Top-10 primarily about changes to objects in the target database: SARGable rewrites of views and stored procedures, function/trigger simplifications, and targeted index/statistics changes that keep semantics intact. Aim for several view optimisations (e.g., 2-3), a couple of procedure optimisations (e.g., 1-2), a couple of index/statistics optimisations or new indexes (e.g., 1-2), and only a small number of database-level enhancements. When both schema and configuration changes are available, prefer the schema changes for the higher slots.';
@@ -10210,8 +10215,8 @@ EXEC #AppendLine '  - If you already have a specific table, view, procedure, or 
 EXEC #AppendLine '';
 EXEC #AppendLine '## Impact and Risk';
 EXEC #AppendLine '';
-EXEC #AppendLine '- Impact: 0.0 to 10.0 (1 decimal), estimated performance upside.';
-EXEC #AppendLine '- Risk: 0.0 to 10.0 (1 decimal), delivery risk/complexity; roughly 0-3 low, 3.1-7.0 moderate, 7.1-10 high.';
+EXEC #AppendLine '- Impact: 0.0 to 10.0 (1 decimal), estimated performance upside; low 0.0-4.0, medium 4.1-7.0, high 7.1-10.0.';
+EXEC #AppendLine '- Risk: 0.0 to 10.0 (1 decimal), delivery risk/complexity; low 0.0-4.0, medium 4.1-7.0, high 7.1-10.0.';
 EXEC #AppendLine '- Where to show: only on concrete result lists (Top-10, per-parent child lists, other multi-result recommendations), not on the Menu or Helpers.';
 EXEC #AppendLine '- Layout for T1-10: Title line; Impact line (with marker); Risk line (with marker); keep each rationale clause very short.';
 EXEC #AppendLine '- Sorting: Top-10 sorted by Impact descending with a bias toward low-risk quick wins.';
@@ -10232,6 +10237,10 @@ EXEC #AppendLine '  - Remind the user they can select 1-10 to drill deeper into 
 EXEC #AppendLine '  - Offer ''More results'' to expand the list to the top 20 (items 11-20 should use the same title/Impact/Risk/action pattern).';
 EXEC #AppendLine '  - Remind them `main menu` returns to the Main Menu.';
 EXEC #AppendLine '  - Invite free-form requests (for example any table, query, or setting to investigate for optimisation).';
+EXEC #AppendLine '- Soft gates. Do not suggest features blocked by version/compat/edition. When blocked, propose the nearest safe alternative.';
+EXEC #AppendLine '- Be concise and factual. Keep advice ASCII-clean and actionable.';
+EXEC #AppendLine '- Explain overrides. When you override table guidance, say why (for example: different waits dominate, stats age severe, spills observed).';
+EXEC #AppendLine '- Delivery clarity. If a recommendation requires an EDMX change, call this out explicitly so the team can coordinate with the app model.';
 EXEC #AppendLine '';
 EXEC #AppendLine '## Assistant Brief Table';
 EXEC #AppendLine '';
@@ -10401,6 +10410,7 @@ EXEC #AppendLine 'Platform, Storage & Maintenance | Batch large deletes; monitor
 EXEC #AppendLine 'Platform, Storage & Maintenance | Consider Lock Pages in Memory with max server memory set | No | 2008+ | 100+ | T-SQL |  | Tokens: spill, Hash Warning, Sort Warning; Where: Plan Warnings; Top Queries';
 EXEC #AppendLine 'Platform, Storage & Maintenance | Remove legacy trace flags now defaulted | No | 2008+ | 100+ | Config |  | ';
 EXEC #AppendLine 'Platform, Storage & Maintenance | Review Soft-NUMA groups and scheduler load distribution | No | 2016+ | 130+ | T-SQL |  | ';
+EXEC #AppendLine 'Platform, Storage & Maintenance | Check if SQL Server instance has service pack / CU updates available | No | 2008+ | 100+ | Config |  | Tokens: service pack, cumulative update, build number; Where: server version / build info';
 EXEC #AppendLine 'Platform, Storage & Maintenance | Full-scope analysis - beyond listed checks | No | 2008+ | 100+ | Analysis |  | ';
 EXEC #AppendLine 'Full Analysis | Best-judgment tuning sweep - no category limits | No | 2008+ | 100+ | Analysis |  | ';
 EXEC #AppendLine '```';

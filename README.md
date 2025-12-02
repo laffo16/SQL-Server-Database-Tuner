@@ -1,4 +1,4 @@
-# Database Tuner
+# SQL Server Database Tuner
 
 Single-file T-SQL script that snapshots a SQL Server database's performance signals and schema into one Markdown report, designed to be read by humans and analysed by LLMs such as ChatGPT or Claude.
 
@@ -21,7 +21,7 @@ Community tools like Brent Ozar's First Responder Kit (for example `sp_Blitz`, `
 Database Tuner takes a different, **Markdown + LLM-first** approach:
 
 - Instead of immediately listing findings, it captures a broad diagnostic snapshot into a single, portable `.md` file.
-- That file can be versioned alongside your code, attached to tickets, or shared with an LLM for deeper analysis.
+- That Markdown report file can be versioned alongside your code, attached to tickets, or shared with an LLM for deeper analysis.
 - The Assistant Brief and meta blocks are designed so that an LLM can:
   - Start from a Main Menu.
   - Propose Top-10 low-risk opportunities.
@@ -182,7 +182,7 @@ This script has been iterated on heavily and is used against real databases, but
 - Expect slice layouts and scoring heuristics to improve over time.
 - Always test in non-production first and review any recommendations from an LLM before applying them.
 
-If this repository is published publicly and you would like to contribute, you can:
+If you would like to contribute, you can:
 
 - File issues with sample reports when a slice misbehaves or could be more useful.
 - Suggest additional slices that would help your tuning workflow.
