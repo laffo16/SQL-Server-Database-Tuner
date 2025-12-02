@@ -67,8 +67,8 @@ Think of this script as an **evidence pack generator**. A strong LLM can then re
    ```sql
    :SETVAR TargetDB     "YourDatabaseName"
    :SETVAR OutputDir    "C:\Temp\DatabaseTuner\"      -- directory must already exist
-   :SETVAR ExportSchema "0"                           -- 0 or 1
-   :SETVAR SafeMode     "1"                           -- 0 or 1 (public script defaults to 1)
+   :SETVAR ExportSchema "1"                           -- 0 or 1 (1 as default)
+   :SETVAR SafeMode     "1"                           -- 0 or 1 (1 as default)
    ```
 
 5. Press **F5** to run the script.
@@ -96,20 +96,17 @@ These variables are defined at the top of the Database Tuner script.
   - The directory must already exist. If it does not, `sqlcmd` falls back to printing the Markdown to STDOUT (for example the SSMS Messages tab).
 
 - **`ExportSchema`**
-  - `0` (default) = do not append a schema appendix.
-  - `1` = append a schema export to the end of the report. This includes definitions for views, procedures, functions, triggers, tables, constraints, indexes, and more.
+  - `0` = do not append a schema appendix.
+  - `1` (default) = append a schema export to the end of the report. This includes definitions for views, procedures, functions, triggers, tables, constraints, indexes, and more.
   - This can be very verbose and may include sensitive code. Prefer `0` when sharing externally unless you explicitly need schema context.
 
 - **`SafeMode`**
   - `0` = full detail.
-  - `1` = **Safe Mode ON**. Certain fields are redacted or gated and replaced with `[SafeMode]`. Examples include:
+  - `1` (default) = **Safe Mode ON**. Certain fields are redacted or gated and replaced with `[SafeMode]`. Examples include:
     - Server and instance names.
     - Host names and file system paths.
     - Some job commands, mail profiles, credentials, and SQL text.
   - Temp table schemas do not change; only values are masked. This makes it easier to share reports outside your organisation or with cloud-hosted LLMs.
-
-- **`Version`**
-  - Free-form label used in the report header and file name (for example `"2.11"` or a date stamp).
 
 These flags also appear in the report header and in the Assistant Brief so the LLM can see how the report was generated.
 
