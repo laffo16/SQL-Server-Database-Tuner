@@ -66,9 +66,9 @@ Think of this script as an **evidence pack generator**. A strong LLM can then re
 
    ```sql
    :SETVAR TargetDB     "YourDatabaseName"
-   :SETVAR OutputDir    "C:\\Temp\\DatabaseTuner\\"   -- directory must already exist
+   :SETVAR OutputDir    "C:\Temp\DatabaseTuner\"   -- directory must already exist
    :SETVAR ExportSchema "0"                           -- 0 or 1
-   :SETVAR SafeMode     "1"                           -- 0 or 1 (this script defaults to 1)
+   :SETVAR SafeMode     "1"                           -- 0 or 1 (public script defaults to 1)
    ```
 
 5. Press **F5** to run the script.
