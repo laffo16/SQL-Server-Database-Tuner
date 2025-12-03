@@ -1,0 +1,5 @@
+# GitHub Linguist overrides for this repo
+# Treat all .sql files as SQL Server T-SQL (not PL/pgSQL etc.)
+*.sql linguist-language=TSQL
+*.sql linguist-detectable=true
+
