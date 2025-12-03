@@ -16,7 +16,7 @@
 --   5) Upload to LLM (ChatGPT etc) for analysis (zip md if need)
 -- Notes:
 --   - Ensure OutputDir exists otherwise data will be printed to the SSMS console instead of to file.
---   - Toggle ExportSchema or SafeMode (which redacts sensitive information) when needed.
+--   - Toggle ExportSchema or SafeMode (which redacts sensitive information) when needed (1 or 0).
 --   - Ignore "The join order has been enforced" and "Null value is eliminated by an aggregate" warnings.
 --   - No database changes are made by this script aside from temp tables which are discarded when query closes.
 --   - Author: Dean Lafferty (laffo16@hotmail.com)

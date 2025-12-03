@@ -6,7 +6,7 @@ Single-file T-SQL script that snapshots a SQL Server database's performance sign
 
 ## 1. What this is
 
-Database Tuner is a **read-only diagnostic script** for Microsoft SQL Server.
+Database Tuner is a **read-only diagnostic script** for Microsoft SQL Server, focused on database performance optimisation and health checks.
 
 - Collects a point-in-time view of server and database configuration, workload, storage, indexing, statistics, waits, and more.
 - Stores results in temp tables in `tempdb`, then exports everything as one Markdown file (`dt_report (DatabaseName - Version).md`).
@@ -27,7 +27,7 @@ Database Tuner takes a different, **Markdown + LLM-first** approach:
   - Propose Top-10 low-risk opportunities.
   - Drill into specific slices with clear "Source" and "Why" notes.
 
-Think of this script as an **evidence pack generator**. A strong LLM can then read that evidence and explain trade-offs, rather than you or the tool hard-coding every rule.
+Think of this script as an **evidence pack generator for SQL Server performance tuning**. A strong LLM can then read that evidence and explain trade-offs, rather than you or the tool hard-coding every rule.
 
 ## 3. Requirements
 
