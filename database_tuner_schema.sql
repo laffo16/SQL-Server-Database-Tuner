@@ -379,6 +379,7 @@ EXEC #AppendLine '- **Version:** $(Version)';
 EXEC #AppendLine '- **Target DB:** [{%1}]', @ExportDatabaseName;
 EXEC #AppendLine '- **Server:** {%1}', @ExportServerName;
 EXEC #AppendLine '- **Generated (local):** {%1}', @ExportSysDateTime;
+EXEC #AppendLine '- **Product Major Version:** {%1}', @ProductMajorVersion;
 EXEC #AppendLine '- **DB Compat:** {%1}', @CompatLevel;
 EXEC #AppendLine '- **Safe Mode:** {%1}', @ExportSafeMode;
 EXEC #AppendLine '';
