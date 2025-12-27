@@ -190,7 +190,21 @@ If you would like to contribute, you can:
 
 ---
 
-## 11. License
+## 11. Additional Scripts
+
+This repository also includes a couple of focused variants of the main script:
+
+- `database_tuner_legacy.sql`
+  - Supports SQL Server 2008 / 2008 R2 through SQL Server 2025.
+  - Less verbose than the main script (recommended for SQL Server 2017+).
+  - Kept separate to avoid code bloat from handling cross-version differences in one file.
+- `database_tuner_schema.sql`
+  - Schema export only (no diagnostics/collectors).
+  - Useful during development when you just need a Markdown schema snapshot (`dt_schema_report (DatabaseName - Version).md`).
+
+---
+
+## 12. License
 
 This project is licensed under the MIT License (see the `LICENSE` file).
 
