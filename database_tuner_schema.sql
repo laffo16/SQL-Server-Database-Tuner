@@ -387,7 +387,7 @@ EXEC #AppendLine '## Assistant Brief';
 EXEC #AppendLine '';
 EXEC #AppendLine 'This export contains schema only.';
 EXEC #AppendLine '';
-EXEC #AppendLine '- Use it to review tables, relationships, indexes, and module/trigger definitions.';
+EXEC #AppendLine '- Use it to review tables, views, procedures, functions, relationships, indexes, and module/trigger definitions.';
 EXEC #AppendLine '- If Safe Mode is On, module/trigger/constraint definitions are redacted (shown as -- [Redacted]) and extended property values as [Redacted].';
 EXEC #AppendLine '';
 
